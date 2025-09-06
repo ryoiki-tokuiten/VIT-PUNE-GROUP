@@ -1,5 +1,7 @@
 const ProjectModel = require('../models/project.model');
 const UserModel = require('../models/user.model');
+const ProjectInvitationModel = require('../models/projectInvitation.model');
+const NotificationModel = require('../models/notification.model');
 
 /**
  * Project controller
@@ -217,41 +219,39 @@ class ProjectController {
   /**
    * Add member to project
    */
-  static async addProjectMember(req, res) {
+  static async addMember(req, res) {
     try {
       const { projectId } = req.params;
       const { username, role = 'Member' } = req.body;
 
-      if (isNaN(projectId)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid project ID'
-        });
-      }
+      console.log('Add member request:', { projectId, username, role, userId: req.user.id });
 
-      if (!username || username.trim().length === 0) {
+      // Validate input
+      if (!username) {
         return res.status(400).json({
           success: false,
           message: 'Username is required'
         });
       }
 
-      const validRoles = ['Member', 'Admin', 'Owner'];
-      if (!validRoles.includes(role)) {
+      if (!['Member', 'Admin'].includes(role)) {
         return res.status(400).json({
           success: false,
-          message: 'Invalid role. Must be Member, Admin, or Owner'
+          message: 'Invalid role. Must be Member or Admin'
         });
       }
 
       // Find user by username
       const user = await UserModel.findByUsername(username.toLowerCase());
       if (!user) {
+        console.log('User not found:', username);
         return res.status(404).json({
           success: false,
           message: 'User not found'
         });
       }
+
+      console.log('Found user:', { id: user.id, username: user.username });
 
       // Check if user is already a member
       const existingRole = await ProjectModel.getMemberRole(parseInt(projectId), user.id);
@@ -262,12 +262,50 @@ class ProjectController {
         });
       }
 
-      const member = await ProjectModel.addMember(parseInt(projectId), user.id, role);
+      // Check if invitation already exists
+      const existingInvitation = await ProjectInvitationModel.getByProjectAndUser(parseInt(projectId), user.id);
+      if (existingInvitation && existingInvitation.status === 'pending') {
+        return res.status(409).json({
+          success: false,
+          message: 'User already has a pending invitation for this project'
+        });
+      }
+
+      // Create invitation instead of direct membership
+      const invitation = await ProjectInvitationModel.create({
+        project_id: parseInt(projectId),
+        inviter_id: req.user.id,
+        invitee_id: user.id,
+        role: role
+      });
+
+      console.log('Created invitation:', invitation);
+
+      // Get project details for notification
+      const project = await ProjectModel.findById(parseInt(projectId));
+      const inviter = await UserModel.findById(req.user.id);
+
+      // Create notification for the invited user
+      await NotificationModel.create({
+        user_id: user.id,
+        type: 'PROJECT_INVITATION',
+        title: 'Project Invitation',
+        message: `${inviter.full_name} invited you to join the project "${project.name}"`,
+        data: {
+          invitation_id: invitation.id,
+          project_id: project.id,
+          project_name: project.name,
+          inviter_name: inviter.full_name,
+          role: role
+        }
+      });
+
+      console.log('Invitation sent successfully');
 
       res.status(201).json({
         success: true,
-        message: 'Member added successfully',
-        data: { member }
+        message: 'Invitation sent successfully',
+        data: { invitation }
       });
     } catch (error) {
       console.error('Add project member error:', error);

@@ -17,6 +17,7 @@ const projectRoutes = require('./src/api/projects.routes');
 const taskRoutes = require('./src/api/tasks.routes');
 const messageRoutes = require('./src/api/messages.routes');
 const attachmentRoutes = require('./src/api/attachments.routes');
+const notificationRoutes = require('./src/api/notifications.routes');
 
 // Create Express app
 const app = express();
@@ -79,6 +80,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/attachments', attachmentRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

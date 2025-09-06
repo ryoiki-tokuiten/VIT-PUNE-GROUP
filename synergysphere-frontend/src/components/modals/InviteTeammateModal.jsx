@@ -52,11 +52,16 @@ const InviteTeammateModal = ({ isOpen, onClose, projectId = null }) => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
-    if (!selectedUser || !selectedProject) return;
+    const targetProjectId = projectId || selectedProject;
+    
+    if (!selectedUser || !targetProjectId) {
+      alert('Please select a user and project');
+      return;
+    }
 
     setLoading(true);
     try {
-      await projectService.addProjectMember(selectedProject, selectedUser.username, inviteRole);
+      await projectService.addProjectMember(targetProjectId, selectedUser.username, inviteRole);
       
       // Reset form
       setSearchQuery('');
@@ -67,7 +72,13 @@ const InviteTeammateModal = ({ isOpen, onClose, projectId = null }) => {
       onClose(true); // Pass true to indicate success
     } catch (error) {
       console.error('Error inviting member:', error);
-      alert('Failed to invite member. Please check the details and try again.');
+      
+      // More detailed error handling
+      if (error.response?.data?.message) {
+        alert(`Failed to invite member: ${error.response.data.message}`);
+      } else {
+        alert('Failed to invite member. Please check the details and try again.');
+      }
     } finally {
       setLoading(false);
     }

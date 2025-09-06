@@ -128,7 +128,7 @@ class UserModel {
   }
 
   /**
-   * Get user's projects
+   * Get user's projects (only accepted memberships, not pending invitations)
    * @param {number} userId - User ID
    * @returns {Promise<Array>} - User's projects
    */
@@ -150,6 +150,12 @@ class UserModel {
       LEFT JOIN tasks t ON p.id = t.project_id
       LEFT JOIN project_members pm2 ON p.id = pm2.project_id
       WHERE pm.user_id = $1
+        AND NOT EXISTS (
+          SELECT 1 FROM project_invitations pi 
+          WHERE pi.project_id = p.id 
+            AND pi.invitee_id = $1 
+            AND pi.status = 'pending'
+        )
       GROUP BY p.id, p.name, p.description, p.created_at, pm.role, u.username, u.full_name
       ORDER BY p.created_at DESC
     `, [userId]);

@@ -9,6 +9,7 @@ import {
   FiZap
 } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
+import NotificationBell from '../notifications/NotificationBell';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -39,10 +40,7 @@ const Navbar = () => {
           />
         </div>
 
-        <button className="notification-btn">
-          <FiBell className="notification-icon" size={18} />
-          <span className="notification-badge">3</span>
-        </button>
+        <NotificationBell />
 
         <div className="user-menu-container">
           <button 

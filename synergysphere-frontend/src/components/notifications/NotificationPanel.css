@@ -1,0 +1,240 @@
+/* Notification Panel Styles */
+.notification-panel-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.notification-panel {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px; /* Space for navbar */
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.unread-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+  margin-left: 8px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+}
+
+.notification-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #f7d63e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-notifications {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.notifications-list {
+  padding: 0;
+}
+
+.notification-item {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.notification-item:hover {
+  background: #f9fafb;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.unread {
+  background: #fef7e0;
+  border-left: 4px solid #f7d63e;
+}
+
+.notification-item.unread:hover {
+  background: #fef3c7;
+}
+
+.notification-content-text {
+  margin-bottom: 12px;
+}
+
+.notification-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.notification-message {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.accept-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.accept-btn:hover {
+  background: #059669;
+}
+
+.decline-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.decline-btn:hover {
+  background: #dc2626;
+}
+
+.mark-read-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.mark-read-btn:hover {
+  background: #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .notification-panel-backdrop {
+    padding: 10px;
+  }
+  
+  .notification-panel {
+    max-width: none;
+    margin-top: 50px;
+  }
+  
+  .notification-header {
+    padding: 16px 20px;
+  }
+  
+  .notification-item {
+    padding: 12px 20px;
+  }
+  
+  .notification-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .accept-btn,
+  .decline-btn {
+    width: 100%;
+    padding: 8px 12px;
+  }
+}

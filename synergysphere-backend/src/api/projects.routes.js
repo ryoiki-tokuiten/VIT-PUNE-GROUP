@@ -17,7 +17,7 @@ router.delete('/:id', checkProjectAdmin, ProjectController.deleteProject);
 
 // Project members management
 router.get('/:projectId/members', checkProjectMember, ProjectController.getProjectMembers);
-router.post('/:projectId/members', checkProjectAdmin, ProjectController.addProjectMember);
+router.post('/:projectId/members', checkProjectAdmin, ProjectController.addMember);
 router.put('/:projectId/members/:userId/role', checkProjectAdmin, ProjectController.updateMemberRole);
 router.delete('/:projectId/members/:userId', checkProjectAdmin, ProjectController.removeMember);
 
