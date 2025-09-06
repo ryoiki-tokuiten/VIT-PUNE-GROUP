@@ -51,10 +51,14 @@ class AttachmentController {
         });
       }
 
+      const task = await query('SELECT * FROM tasks WHERE id = $1', [taskId]);
+      const taskAttachments = await query('SELECT * FROM attachments WHERE task_id = $1', [taskId]);
+      task.rows[0].attachments = taskAttachments.rows;
+
       res.status(201).json({
         success: true,
         message: 'Files uploaded successfully',
-        data: { attachments }
+        data: { task: task.rows[0] }
       });
     } catch (error) {
       console.error('Upload task files error:', error);

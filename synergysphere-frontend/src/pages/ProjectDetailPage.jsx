@@ -43,8 +43,8 @@ const ProjectDetailPage = () => {
     setShowCreateTask(false);
   };
 
-  const handleTaskUpdated = () => {
-    fetchProjectData();
+  const handleTaskUpdated = (updatedTask) => {
+    setTasks(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
   };
 
   if (loading) {

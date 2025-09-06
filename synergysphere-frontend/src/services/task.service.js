@@ -46,6 +46,11 @@ export const taskService = {
     return response.data.data.comment;
   },
 
+  async getTaskAttachments(taskId) {
+    const response = await api.get(`/tasks/${taskId}/attachments`);
+    return response.data.data.attachments;
+  },
+
   async uploadTaskAttachment(taskId, file) {
     const formData = new FormData();
     formData.append('files', file);
@@ -54,6 +59,6 @@ export const taskService = {
         'Content-Type': 'multipart/form-data',
       },
     });
-    return response.data.data;
+    return response.data.data.task;
   }
 };

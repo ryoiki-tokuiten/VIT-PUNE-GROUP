@@ -7,6 +7,7 @@ const TaskDetailModal = ({ task, onClose, onTaskUpdate }) => {
   const { user } = useAuth();
   const [taskData, setTaskData] = useState(task);
   const [comments, setComments] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -20,6 +21,7 @@ const TaskDetailModal = ({ task, onClose, onTaskUpdate }) => {
 
   useEffect(() => {
     fetchComments();
+    fetchAttachments();
   }, [task.id]);
 
   const fetchComments = async () => {
@@ -31,13 +33,23 @@ const TaskDetailModal = ({ task, onClose, onTaskUpdate }) => {
     }
   };
 
+  const fetchAttachments = async () => {
+    try {
+      const data = await taskService.getTaskAttachments(task.id);
+      setAttachments(data || []);
+    } catch (error) {
+      console.error('Error fetching attachments:', error);
+      setAttachments([]);
+    }
+  };
+
   const handleSaveEdit = async () => {
     setLoading(true);
     try {
       const updatedTask = await taskService.updateTask(task.id, editForm);
       setTaskData(updatedTask);
       setIsEditing(false);
-      onTaskUpdate();
+      onTaskUpdate(updatedTask);
     } catch (error) {
       console.error('Error updating task:', error);
     } finally {
@@ -67,9 +79,11 @@ const TaskDetailModal = ({ task, onClose, onTaskUpdate }) => {
 
     setUploading(true);
     try {
-      await taskService.uploadTaskAttachment(task.id, file);
-      // Refresh task data to show new attachment
-      onTaskUpdate();
+      const updatedTask = await taskService.uploadTaskAttachment(task.id, file);
+      setTaskData(updatedTask);
+      // Refresh attachments to show new upload
+      fetchAttachments();
+      onTaskUpdate(updatedTask);
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
@@ -244,12 +258,12 @@ const TaskDetailModal = ({ task, onClose, onTaskUpdate }) => {
                   </div>
                   
                   <div className="attachments-list">
-                    {taskData.attachments && taskData.attachments.length > 0 ? (
-                      taskData.attachments.map((attachment) => (
+                    {attachments && attachments.length > 0 ? (
+                      attachments.map((attachment) => (
                         <div key={attachment.id} className="attachment-item">
                           <span className="file-icon">📄</span>
                           <span className="file-name">{attachment.file_name}</span>
-                          <a href={`/api/attachments/${attachment.id}`} download>
+                          <a href={`/api/tasks/${task.id}/attachments/${attachment.id}/download`} download>
                             Download
                           </a>
                         </div>

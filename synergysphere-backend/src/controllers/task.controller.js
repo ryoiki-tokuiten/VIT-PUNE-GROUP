@@ -128,6 +128,10 @@ class TaskController {
       const assignees = await TaskModel.getAssignees(parseInt(id));
       task.assignees = assignees;
 
+      // Get attachments
+      const attachments = await TaskModel.getAttachments(parseInt(id));
+      task.attachments = attachments;
+
       res.json({
         success: true,
         data: { task }
@@ -268,6 +272,14 @@ class TaskController {
           message: 'Task not found'
         });
       }
+
+      // Get assignees
+      const assignees = await TaskModel.getAssignees(parseInt(id));
+      task.assignees = assignees;
+
+      // Get attachments
+      const attachments = await TaskModel.getAttachments(parseInt(id));
+      task.attachments = attachments;
 
       res.json({
         success: true,

@@ -414,6 +414,30 @@ class TaskModel {
       client.release();
     }
   }
+
+  /**
+   * Get task attachments
+   * @param {number} taskId - Task ID
+   * @returns {Promise<Array>} - Task attachments
+   */
+  static async getAttachments(taskId) {
+    const result = await query(`
+      SELECT 
+        a.*,
+        u.username as uploader_username,
+        u.full_name as uploader_name
+      FROM attachments a
+      JOIN users u ON a.uploader_id = u.id
+      WHERE a.task_id = $1
+      ORDER BY a.created_at DESC
+    `, [taskId]);
+    
+    return result.rows.map(attachment => ({
+      ...attachment,
+      url: `/api/attachments/${attachment.id}`,
+      download_url: `/api/attachments/${attachment.id}/download`
+    }));
+  }
 }
 
 module.exports = TaskModel;
