@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  FiHome, 
   FiCheckSquare, 
   FiFolder, 
-  FiMail, 
   FiMessageCircle, 
   FiUserPlus 
 } from 'react-icons/fi';
+import { useInviteModal } from '../../contexts/InviteModalContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
+  const { openInviteModal } = useInviteModal();
 
   const sidebarItems = [
     { path: '/tasks', label: 'My Tasks', icon: FiCheckSquare },
@@ -38,7 +38,7 @@ const Sidebar = () => {
       </nav>
       
       <div className="sidebar-bottom">
-        <button className="invite-btn">
+        <button className="invite-btn" onClick={() => openInviteModal()}>
           <FiUserPlus className="invite-icon" size={16} />
           <span>Invite teammates</span>
         </button>

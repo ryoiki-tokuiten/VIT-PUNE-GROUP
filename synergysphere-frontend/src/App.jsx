@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { InviteModalProvider } from './contexts/InviteModalContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import LoginForm from './components/auth/LoginForm';
@@ -9,11 +10,22 @@ import DashboardPage from './pages/DashboardPage';
 import MyTasksPage from './pages/MyTasksPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ChatPage from './pages/ChatPage';
+import InviteTeammateModal from './components/modals/InviteTeammateModal';
+import { useInviteModal } from './contexts/InviteModalContext';
 import './App.css';
 
-function App() {
+const AppContent = () => {
+  const { isOpen, projectId, closeInviteModal } = useInviteModal();
+
+  const handleInviteClose = (success) => {
+    closeInviteModal();
+    if (success) {
+      // Optionally refresh data or show success message
+    }
+  };
+
   return (
-    <AuthProvider>
+    <>
       <Router>
         <Routes>
           {/* Public Routes */}
@@ -85,6 +97,22 @@ function App() {
           <Route path="*" element={<Navigate to="/tasks" replace />} />
         </Routes>
       </Router>
+      
+      <InviteTeammateModal 
+        isOpen={isOpen}
+        projectId={projectId}
+        onClose={handleInviteClose}
+      />
+    </>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <InviteModalProvider>
+        <AppContent />
+      </InviteModalProvider>
     </AuthProvider>
   );
 }

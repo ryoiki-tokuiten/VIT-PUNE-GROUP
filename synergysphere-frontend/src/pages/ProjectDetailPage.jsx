@@ -5,12 +5,15 @@ import { taskService } from '../services/task.service';
 import TaskBoard from '../components/tasks/TaskBoard';
 import CreateTaskModal from '../components/tasks/CreateTaskModal';
 import ActivityFeed from '../components/ActivityFeed';
+import { useInviteModal } from '../contexts/InviteModalContext';
 import './ProjectDetailPage.css';
 
 const ProjectDetailPage = () => {
   const { id } = useParams();
+  const { openInviteModal } = useInviteModal();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showCreateTask, setShowCreateTask] = useState(false);
@@ -30,11 +33,38 @@ const ProjectDetailPage = () => {
       ]);
       setProject(projectData);
       setTasks(tasksData);
+      
+      // Fetch members when switching to members tab or on initial load
+      if (activeTab === 'members') {
+        fetchMembers();
+      }
     } catch (error) {
       setError('Failed to load project data');
       console.error('Error fetching project:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMembers = async () => {
+    try {
+      const membersData = await projectService.getProjectMembers(id);
+      setMembers(membersData.members || []);
+    } catch (error) {
+      console.error('Error fetching members:', error);
+      setMembers([]);
+    }
+  };
+
+  const handleRemoveMember = async (userId) => {
+    if (!window.confirm('Are you sure you want to remove this member?')) return;
+
+    try {
+      await projectService.removeProjectMember(id, userId);
+      fetchMembers(); // Refresh members list
+    } catch (error) {
+      console.error('Error removing member:', error);
+      alert('Failed to remove member.');
     }
   };
 
@@ -93,7 +123,10 @@ const ProjectDetailPage = () => {
           </button>
           <button 
             className={`tab-btn ${activeTab === 'members' ? 'active' : ''}`}
-            onClick={() => setActiveTab('members')}
+            onClick={() => {
+              setActiveTab('members');
+              if (members.length === 0) fetchMembers();
+            }}
           >
             Members
           </button>
@@ -130,9 +163,57 @@ const ProjectDetailPage = () => {
 
           {activeTab === 'members' && (
             <div className="members-section">
-              <h2>Project Members</h2>
-              <div className="members-placeholder">
-                <p>Members management coming soon...</p>
+              <div className="section-header">
+                <h2>Project Members</h2>
+                <button 
+                  className="invite-member-btn"
+                  onClick={() => openInviteModal(id)}
+                >
+                  <span className="btn-icon">+</span>
+                  Invite Member
+                </button>
+              </div>
+              
+              <div className="members-list">
+                {members.length > 0 ? (
+                  members.map((member) => (
+                    <div key={member.user_id} className="member-card">
+                      <div className="member-info">
+                        <img 
+                          src={`https://ui-avatars.com/api/?name=${member.full_name}&background=f7d63e&color=1a202c&size=40`}
+                          alt={member.full_name}
+                          className="member-avatar"
+                        />
+                        <div className="member-details">
+                          <h4 className="member-name">{member.full_name}</h4>
+                          <p className="member-email">{member.email}</p>
+                          <span className={`member-role ${member.role.toLowerCase()}`}>
+                            {member.role}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="member-actions">
+                        <span className="join-date">
+                          Joined {member.joined_at ? new Date(member.joined_at).toLocaleDateString() : 'Recently'}
+                        </span>
+                        {member.role !== 'Owner' && (
+                          <button 
+                            className="remove-member-btn"
+                            onClick={() => handleRemoveMember(member.user_id)}
+                            title="Remove member"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-members">
+                    <p>No members found. Invite team members to collaborate!</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -150,6 +231,7 @@ const ProjectDetailPage = () => {
           onTaskCreated={handleTaskCreated}
         />
       )}
+
     </div>
   );
 };
