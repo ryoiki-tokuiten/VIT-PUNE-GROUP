@@ -64,7 +64,7 @@ const authenticateToken = async (req, res, next) => {
  */
 const checkProjectMember = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId || req.body.projectId;
+    const projectId = req.params.projectId || req.params.id || req.body.projectId;
     const userId = req.user.id;
 
     if (!projectId) {
@@ -103,7 +103,7 @@ const checkProjectMember = async (req, res, next) => {
  */
 const checkProjectAdmin = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId || req.body.projectId;
+    const projectId = req.params.projectId || req.params.id || req.body.projectId;
     const userId = req.user.id;
 
     const memberResult = await query(

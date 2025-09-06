@@ -1,0 +1,104 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/layout/Layout';
+import LoginForm from './components/auth/LoginForm';
+import SignupForm from './components/auth/SignupForm';
+import DashboardPage from './pages/DashboardPage';
+import MyTasksPage from './pages/MyTasksPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
+import './App.css';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<SignupForm />} />
+          
+          {/* Protected Routes */}
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Layout>
+                <Navigate to="/dashboard" replace />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Layout>
+                <DashboardPage />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/projects" element={
+            <ProtectedRoute>
+              <Layout>
+                <DashboardPage />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/projects/:id" element={
+            <ProtectedRoute>
+              <Layout>
+                <ProjectDetailPage />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/tasks" element={
+            <ProtectedRoute>
+              <Layout>
+                <MyTasksPage />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/team" element={
+            <ProtectedRoute>
+              <Layout>
+                <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
+                  <h2>Team Management</h2>
+                  <p>Coming soon...</p>
+                </div>
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/inbox" element={
+            <ProtectedRoute>
+              <Layout>
+                <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
+                  <h2>Inbox</h2>
+                  <p>Direct messaging coming soon...</p>
+                </div>
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/reports" element={
+            <ProtectedRoute>
+              <Layout>
+                <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
+                  <h2>Reports</h2>
+                  <p>Analytics and reports coming soon...</p>
+                </div>
+              </Layout>
+            </ProtectedRoute>
+          } />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;

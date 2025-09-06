@@ -1,0 +1,27 @@
+/* Layout Styles */
+.layout {
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.layout-body {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+  
+  .layout-body {
+    flex-direction: column;
+  }
+}

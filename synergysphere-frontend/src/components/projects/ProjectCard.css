@@ -1,0 +1,93 @@
+/* Project Card Styles */
+.project-card {
+  display: block;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #f7d63e;
+}
+
+.project-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.project-icon {
+  font-size: 24px;
+  background: #f3f4f6;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-arrow {
+  font-size: 18px;
+  color: #9ca3af;
+  transition: all 0.2s ease;
+}
+
+.project-card:hover .project-arrow {
+  color: #f7d63e;
+  transform: translateX(4px);
+}
+
+.project-content {
+  flex: 1;
+}
+
+.project-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.project-description {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.task-count {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .project-card {
+    padding: 20px;
+  }
+  
+  .project-name {
+    font-size: 16px;
+  }
+}
