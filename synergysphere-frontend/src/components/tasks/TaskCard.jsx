@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './TaskCard.css';
 
-const TaskCard = ({ task, showProject = false, onTaskUpdate }) => {
+const TaskCard = ({ task, showProject = false, onTaskUpdate, onTaskClick, useModal = false }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Pending': return '#ef4444';
@@ -37,9 +37,18 @@ const TaskCard = ({ task, showProject = false, onTaskUpdate }) => {
     <div className="task-card">
       <div className="task-card-content">
         <div className="task-header">
-          <Link to={`/tasks/${task.id}`} className="task-title">
-            {task.title}
-          </Link>
+          {useModal ? (
+            <button 
+              className="task-title task-title-button" 
+              onClick={() => onTaskClick(task)}
+            >
+              {task.title}
+            </button>
+          ) : (
+            <Link to={`/tasks/${task.id}`} className="task-title">
+              {task.title}
+            </Link>
+          )}
           <div 
             className="task-status"
             style={{ 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FiPlus, FiFolderPlus, FiLoader } from 'react-icons/fi';
 import { projectService } from '../services/project.service';
 import ProjectCard from '../components/projects/ProjectCard';
 import CreateProjectModal from '../components/projects/CreateProjectModal';
@@ -36,7 +37,8 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <div className="loading-spinner"></div>
+        <FiLoader className="loading-spinner" size={32} />
+        <p className="loading-text">Loading your projects...</p>
       </div>
     );
   }
@@ -54,7 +56,7 @@ const DashboardPage = () => {
           className="create-project-btn"
           onClick={() => setShowCreateModal(true)}
         >
-          <span className="btn-icon">+</span>
+          <FiPlus className="btn-icon" size={18} />
           New Project
         </button>
       </div>
@@ -68,13 +70,14 @@ const DashboardPage = () => {
       <div className="projects-grid">
         {projects.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">📁</div>
+            <FiFolderPlus className="empty-icon" size={64} />
             <h3>No projects yet</h3>
-            <p>Get started by creating your first project</p>
+            <p>Get started by creating your first project and begin collaborating with your team</p>
             <button 
               className="empty-action-btn"
               onClick={() => setShowCreateModal(true)}
             >
+              <FiPlus size={16} />
               Create Project
             </button>
           </div>

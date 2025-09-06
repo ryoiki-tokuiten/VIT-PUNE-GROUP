@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { 
+  FiSearch, 
+  FiBell, 
+  FiUser, 
+  FiSettings, 
+  FiLogOut,
+  FiZap
+} from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
-
-  const navItems = [
-    { path: '/dashboard', label: 'Home', icon: '🏠' },
-    { path: '/tasks', label: 'Tasks', icon: '✓' },
-    { path: '/projects', label: 'Projects', icon: '📁' },
-    { path: '/team', label: 'Team', icon: '👥' }
-  ];
 
   const handleLogout = () => {
     logout();
@@ -24,36 +24,23 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/dashboard" className="navbar-brand">
-          <span className="brand-icon">⚡</span>
+          <FiZap className="brand-icon" size={24} />
           <span className="brand-text">SynergySphere</span>
         </Link>
-        
-        <div className="navbar-nav">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-label">{item.label}</span>
-            </Link>
-          ))}
-        </div>
       </div>
 
       <div className="navbar-right">
         <div className="search-container">
+          <FiSearch className="search-icon" size={16} />
           <input
             type="text"
             placeholder="Search tasks..."
             className="search-input"
           />
-          <span className="search-icon">🔍</span>
         </div>
 
         <button className="notification-btn">
-          <span className="notification-icon">🔔</span>
+          <FiBell className="notification-icon" size={18} />
           <span className="notification-badge">3</span>
         </button>
 
@@ -75,10 +62,17 @@ const Navbar = () => {
                 <div className="user-username">@{user?.username}</div>
               </div>
               <hr />
-              <button className="dropdown-item">Profile</button>
-              <button className="dropdown-item">Settings</button>
+              <button className="dropdown-item">
+                <FiUser size={16} />
+                Profile
+              </button>
+              <button className="dropdown-item">
+                <FiSettings size={16} />
+                Settings
+              </button>
               <hr />
               <button className="dropdown-item logout" onClick={handleLogout}>
+                <FiLogOut size={16} />
                 Logout
               </button>
             </div>

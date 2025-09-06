@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { taskService } from '../services/task.service';
 import TaskCard from '../components/tasks/TaskCard';
+import TaskDetailModal from '../components/tasks/TaskDetailModal';
 import './MyTasksPage.css';
 
 const MyTasksPage = () => {
@@ -8,6 +9,8 @@ const MyTasksPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, pending, in-progress, completed
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showTaskModal, setShowTaskModal] = useState(false);
 
   useEffect(() => {
     fetchMyTasks();
@@ -39,6 +42,16 @@ const MyTasksPage = () => {
 
   const getTaskCountByStatus = (status) => {
     return tasks.filter(task => task.status === status).length;
+  };
+
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+    setShowTaskModal(true);
+  };
+
+  const handleCloseTaskModal = () => {
+    setShowTaskModal(false);
+    setSelectedTask(null);
   };
 
   const filteredTasks = getFilteredTasks();
@@ -127,10 +140,21 @@ const MyTasksPage = () => {
               task={task} 
               showProject={true}
               onTaskUpdate={fetchMyTasks}
+              onTaskClick={handleTaskClick}
+              useModal={true}
             />
           ))
         )}
       </div>
+
+      {/* Task Detail Modal */}
+      {showTaskModal && selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={handleCloseTaskModal}
+          onTaskUpdate={fetchMyTasks}
+        />
+      )}
     </div>
   );
 };

@@ -26,16 +26,29 @@
 }
 
 .task-title {
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #1a202c;
+  color: #1f2937;
   text-decoration: none;
-  flex: 1;
   line-height: 1.4;
 }
 
 .task-title:hover {
-  color: #374151;
+  color: #3b82f6;
+}
+
+.task-title-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+
+.task-title-button:hover {
+  color: #3b82f6;
 }
 
 .task-status {

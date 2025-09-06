@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FiFolder, FiArrowRight, FiCheckCircle, FiClock } from 'react-icons/fi';
 import './ProjectCard.css';
 
 const ProjectCard = ({ project }) => {
@@ -15,8 +16,12 @@ const ProjectCard = ({ project }) => {
   return (
     <Link to={`/projects/${project.id}`} className="project-card">
       <div className="project-card-header">
-        <div className="project-icon">📁</div>
-        <div className="project-arrow">→</div>
+        <div className="project-icon">
+          <FiFolder size={24} />
+        </div>
+        <div className="project-arrow">
+          <FiArrowRight size={18} />
+        </div>
       </div>
       
       <div className="project-content">
@@ -26,9 +31,16 @@ const ProjectCard = ({ project }) => {
         </p>
         
         <div className="project-stats">
-          <span className="task-count">
-            {taskStats.remaining} tasks remaining
-          </span>
+          <div className="stat-item">
+            <FiClock size={14} />
+            <span>{taskStats.remaining} tasks remaining</span>
+          </div>
+          {taskStats.total > 0 && (
+            <div className="stat-item">
+              <FiCheckCircle size={14} />
+              <span>{project.completed_tasks || 0} completed</span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

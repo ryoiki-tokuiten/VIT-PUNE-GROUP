@@ -8,6 +8,7 @@ import SignupForm from './components/auth/SignupForm';
 import DashboardPage from './pages/DashboardPage';
 import MyTasksPage from './pages/MyTasksPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import ChatPage from './pages/ChatPage';
 import './App.css';
 
 function App() {
@@ -22,17 +23,7 @@ function App() {
           {/* Protected Routes */}
           <Route path="/" element={
             <ProtectedRoute>
-              <Layout>
-                <Navigate to="/dashboard" replace />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Layout>
-                <DashboardPage />
-              </Layout>
+              <Navigate to="/tasks" replace />
             </ProtectedRoute>
           } />
           
@@ -82,19 +73,16 @@ function App() {
             </ProtectedRoute>
           } />
           
-          <Route path="/reports" element={
+          <Route path="/chat" element={
             <ProtectedRoute>
               <Layout>
-                <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>
-                  <h2>Reports</h2>
-                  <p>Analytics and reports coming soon...</p>
-                </div>
+                <ChatPage />
               </Layout>
             </ProtectedRoute>
           } />
           
           {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/tasks" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
